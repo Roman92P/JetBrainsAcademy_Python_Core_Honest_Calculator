@@ -18,6 +18,12 @@ msg_8 = " ... very, very lazy"
 
 msg_9 = "You are"
 
+msg_10 = "Are you sure? It is only one digit! (y / n)"
+
+msg_11 = "Don't be silly! It's just one number! Add to the memory? (y / n)"
+
+msg_12 = "Last chance! Do you really want to embarrass yourself? (y / n)"
+
 opers = ['+', '-', '*', '/']
 
 memory = 0
@@ -26,6 +32,8 @@ continue_calculation = True
 
 
 def is_one_digit(v):
+    # if v == 5.0:
+    #     return False
     return -10 < v < 10 and v.is_integer()
 
 
@@ -45,7 +53,7 @@ def check(v1, v2, v3):
 while continue_calculation:
 
     result = 0
-    read_calc = str(input(msg_0))
+    read_calc = str(input(msg_0+"\n"))
     read_calc_arr = read_calc.split(' ')
     x = read_calc_arr[0]
     oper = read_calc_arr[1]
@@ -80,20 +88,41 @@ while continue_calculation:
         result = x * y
         print(result)
     if oper == '/':
-        if y != '0':
+        if y == 0:
             print(msg_3)
             continue
         result = x / y
         print(result)
 
+
     answer = ''
-    while answer != 'y' and answer != 'n':
-        answer = str(input(msg_4))
+    memory_check = True
+    while memory_check:
+        answer = str(input(msg_4+"\n"))
         if answer == 'y':
-            memory = result
+            if is_one_digit(result):
+                msg_index = 10
+                while True:
+                    question = str(input(globals()[f"msg_{msg_index}"]+"\n"))
+                    if question == 'y':
+                        if msg_index < 12:
+                            msg_index += 1
+                            continue
+                        else:
+                            memory = result
+                            memory_check = False
+                            break
+                    if question == 'n':
+                        memory_check = False
+                        break
+            else:
+                memory = result
+                memory_check = False
+        if answer == 'n':
+            memory_check = False
 
     new_calc = ''
     while new_calc != 'y' and new_calc != 'n':
-        new_calc = str(input(msg_5))
+        new_calc = str(input(msg_5+"\n"))
         if new_calc == 'n':
             continue_calculation = False
